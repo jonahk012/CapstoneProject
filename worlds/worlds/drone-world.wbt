@@ -1,0 +1,35 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.010814105374973026 -0.7510577316979539 -0.6601479673388864 5.659484655045352
+  position -1.560623378414123 -0.721232423887142 0.8945303161929238
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Robot {
+  children [
+    CadShape {
+      url [
+        "../../../../Downloads/rfgt wsdrfw/ardupilot_gazebo/models/iris_with_standoffs/meshes/iris.dae"
+      ]
+    }
+    CadShape {
+      url [
+        "../../../../Downloads/rfgt wsdrfw/ardupilot_gazebo/models/iris_with_standoffs/meshes/iris_prop_ccw.dae"
+      ]
+    }
+    CadShape {
+      url [
+        "../../../../Downloads/rfgt wsdrfw/ardupilot_gazebo/models/iris_with_standoffs/meshes/iris_prop_cw.dae"
+      ]
+    }
+  ]
+  name "drone"
+}
