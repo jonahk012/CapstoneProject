@@ -34,20 +34,20 @@ namespace DroneConfig
 
 	// motor 0
 	constexpr int motor0_direction = -1;
-	constexpr Vector3 motor0Pos{0.13, -0.22, 0.023};
+	constexpr Vector3 motor0Pos{0.1293, -0.2188, 0.0262};
 
 	// motor 1
 	constexpr int motor1_direction = -1;
-	constexpr Vector3 motor1Pos{-0.13, 0.2, 0.023};
+	constexpr Vector3 motor1Pos{-0.1339, 0.2066, 0.0262};
 
 		
 	// motor 2
 	constexpr int motor2_direction = 1;
-	constexpr Vector3 motor2Pos{0.13, 0.22, 0.023};
+	constexpr Vector3 motor2Pos{0.1257, 0.2224, 0.0262};
 
 	// motor 3
 	constexpr int motor3_direction = 1;
-	constexpr Vector3 motor3Pos{-0.13, -0.2, 0.023};
+	constexpr Vector3 motor3Pos{-0.1378, -0.2027, 0.0262};
 
 
 
