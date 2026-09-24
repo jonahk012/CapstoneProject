@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Webots Drone Controller",
+            "command": "g++",
+            "args": [
+                "controllers/drone/flight_controller.cpp",
+                "-I${env:WEBOTS_HOME}/include/controller/cpp",
+                "-L${env:WEBOTS_HOME}/lib/controller",
+                "-lCppController",
+                "-o",
+                "controllers/drone/drone.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

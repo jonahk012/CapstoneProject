@@ -15,7 +15,7 @@ TexturedBackgroundLight {
 }
 Robot {
   children [
-    Transform {
+    Pose {
       children [
         CadShape {
           url [
@@ -24,7 +24,7 @@ Robot {
         }
       ]
     }
-    Transform {
+    Pose {
       translation 0.1293 -0.2188 0.0262
       children [
         CadShape {
@@ -35,7 +35,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Transform {
+    Pose {
       translation -0.1339 0.2066 0.0262
       children [
         CadShape {
@@ -46,7 +46,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Transform {
+    Pose {
       translation 0.1257 0.2224 0.0262
       children [
         CadShape {
@@ -57,7 +57,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Transform {
+    Pose {
       translation -0.1376 -0.2027 0.0262
       children [
         CadShape {
@@ -70,4 +70,5 @@ Robot {
     }
   ]
   name "drone"
+  controller "drone"
 }
