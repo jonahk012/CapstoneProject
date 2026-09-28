@@ -2,20 +2,22 @@
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.010812293897537472 0.7510548753255929 0.6601512467233032 0.6237023330083373
-  position -0.8752577124942499 -0.3969920350322034 0.5230383134096394
+  orientation -0.31342569049029784 0.3072945562275286 0.8985178864405572 1.9496645601490075
+  position 0.23515043712710457 -0.6866317164061693 1.1133040873028397
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
-Robot {
+DEF MY_DRONE Robot {
+  translation 0 0 0.5
   children [
-    Pose {
+    DEF DRONE_BODY Pose {
       children [
         CadShape {
           url [
@@ -24,7 +26,7 @@ Robot {
         }
       ]
     }
-    Pose {
+    DEF MOTOR1 Pose {
       translation 0.1293 -0.2188 0.0262
       children [
         CadShape {
@@ -35,7 +37,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Pose {
+    DEF MOTOR2 Pose {
       translation -0.1339 0.2066 0.0262
       children [
         CadShape {
@@ -46,7 +48,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Pose {
+    DEF MOTOR3 Pose {
       translation 0.1257 0.2224 0.0262
       children [
         CadShape {
@@ -57,7 +59,7 @@ Robot {
       ]
       translationStep 0.0001
     }
-    Pose {
+    DEF MOTOR4 Pose {
       translation -0.1376 -0.2027 0.0262
       children [
         CadShape {
@@ -70,5 +72,17 @@ Robot {
     }
   ]
   name "drone"
+  boundingObject Group {
+    children [
+      Box {
+        size 0.5 0.5 0.1
+      }
+    ]
+  }
+  physics Physics {
+  }
   controller "drone"
+  supervisor TRUE
+}
+RectangleArena {
 }
