@@ -70,5 +70,5 @@ Robot {
     }
   ]
   name "drone"
-  controller "flight_controller"
+  controller "drone"
 }
