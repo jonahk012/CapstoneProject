@@ -1,7 +1,6 @@
 #include <iostream>
 #include <webots/Robot.hpp>
 #include <webots/Supervisor.hpp>
-#include <vector>
 #include "../../config/DroneConfig.hpp"
 
 void loadConfigData(webots::Supervisor* droneSuper)

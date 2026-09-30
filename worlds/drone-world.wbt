@@ -7,16 +7,53 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.14023663516217053 0.7744258195107879 0.6169265241772611 0.5710358295733997
-  position -1.2311831917742966 -0.49259503674361327 1.0856877097399478
+  orientation -0.09219296757611983 0.8715196822444086 0.48161592601378317 0.43245249461280877
+  position -0.9583204795502689 -0.2365557695719947 0.31002767974826595
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 DEF MY_DRONE Robot {
-  translation 0 0 0.5
+  translation -0.0005574954148682091 2.175913114279811e-06 -0.10058882557457986
+  rotation -0.0222479013062778 -0.04801158349788869 -0.9985989779373357 0.0007955727987666139
   children [
+    DEF joint0 HingeJoint {
+      device [
+        RotationalMotor {
+          name "motor0"
+        }
+      ]
+    }
+    DEF joint1 HingeJoint {
+      device [
+        RotationalMotor {
+          name "motor1"
+        }
+      ]
+    }
+    DEF joint2 HingeJoint {
+      device [
+        RotationalMotor {
+          name "motor2"
+        }
+      ]
+    }
+    DEF joint3 HingeJoint {
+      device [
+        RotationalMotor {
+          name "motor3"
+        }
+      ]
+    }
+    DEF accelerometer Accelerometer {
+    }
+    DEF imu InertialUnit {
+    }
+    DEF gyro Gyro {
+    }
+    DEF gps GPS {
+    }
     DEF DRONE_BODY Pose {
       children [
         CadShape {
@@ -94,4 +131,5 @@ DEF MY_DRONE Robot {
   supervisor TRUE
 }
 RectangleArena {
+  translation 0 0 -0.15
 }

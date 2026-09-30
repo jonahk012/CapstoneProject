@@ -7,4 +7,8 @@ build/release/drone.o: drone.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Field.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Proto.hpp \
  C:/Program\ Files/Webots/include/controller/c/webots/contact_point.h \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/GPS.hpp \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Gyro.hpp \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/InertialUnit.hpp \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Accelerometer.hpp \
  dataLoader.hpp
