@@ -50,6 +50,10 @@ namespace DroneConfig
 	constexpr Vector3 motor3Pos{-0.1378, -0.2027, 0.0262};
 
 
-
+	constexpr Vector3 centerOfMass = {
+		((motor0Pos.x + motor1Pos.x + motor2Pos.x + motor3Pos.x) / motorCount),
+		((motor0Pos.y + motor1Pos.y + motor2Pos.y + motor3Pos.y) / motorCount),
+		((motor0Pos.z + motor1Pos.z + motor2Pos.z + motor3Pos.z) / motorCount)
+	};
 
 }

@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.31342569049029784 0.3072945562275286 0.8985178864405572 1.9496645601490075
-  position 0.23515043712710457 -0.6866317164061693 1.1133040873028397
+  orientation -0.12165762326586885 0.8308442830813213 0.543044381217949 0.5267758279263595
+  position -1.1192862169700417 -0.4845237539016137 1.0371787200471023
 }
 TexturedBackground {
 }
@@ -80,6 +80,15 @@ DEF MY_DRONE Robot {
     ]
   }
   physics Physics {
+    density -1
+    mass 1.5
+    centerOfMass [
+      -0.004175 0.001875 0.0262
+    ]
+    inertiaMatrix [
+      0.008 0.015 0.017
+      0 0 0
+    ]
   }
   controller "drone"
   supervisor TRUE

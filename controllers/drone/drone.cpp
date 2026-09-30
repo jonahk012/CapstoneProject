@@ -8,21 +8,18 @@
 
 int main()
 {
+    // set up drone (robot) object
+    webots::Robot *drone = new webots::Robot();
+    
+    const int timeStep = drone->getBasicTimeStep();
+    
+    webots::InertialUnit *imu =  drone->getInertialUnit("imu");
     
     
-    
-    webots::Supervisor *supervisor = new webots::Supervisor();
-    webots::Node *droneNode = supervisor->getFromDef("MY_DRONE");
-    const double *position = droneNode->getPosition();
-     
-    //std::cout << "flight Controller Connected to the \"" << robot->getName() << "\"" << std::endl;
-    
-    std::cout << DroneConfig::mass << std::endl;
-    
-    std::cout << "Drone Position: "
-              << "X: " << position[0] << ", "
-              << "Y: " << position[1] << ", "
-              << "Z: " << position[2] << std::endl;
+    while(drone->step(timeStep) != -1)
+    { 
+      
+    }
     return 0;
 }
 
