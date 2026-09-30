@@ -1,4 +1,4 @@
-build/release/drone.o: drone.cpp \
+build/release/dataLoader.o: dataLoader.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Robot.hpp \
  C:/Program\ Files/Webots/include/controller/c/webots/types.h \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Supervisor.hpp \
@@ -7,4 +7,4 @@ build/release/drone.o: drone.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Field.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Proto.hpp \
  C:/Program\ Files/Webots/include/controller/c/webots/contact_point.h \
- dataLoader.hpp
+ ../../config/DroneConfig.hpp
