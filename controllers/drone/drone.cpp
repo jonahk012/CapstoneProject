@@ -2,17 +2,22 @@
 #include <webots/Robot.hpp>
 #include <webots/Supervisor.hpp>
 #include <vector>
-
+#include "../../config/DroneConfig.hpp"
 
 
 
 int main()
 {
+    
+    
+    
     webots::Supervisor *supervisor = new webots::Supervisor();
     webots::Node *droneNode = supervisor->getFromDef("MY_DRONE");
     const double *position = droneNode->getPosition();
      
     //std::cout << "flight Controller Connected to the \"" << robot->getName() << "\"" << std::endl;
+    
+    std::cout << DroneConfig::mass << std::endl;
     
     std::cout << "Drone Position: "
               << "X: " << position[0] << ", "
