@@ -7,44 +7,55 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.10888433883913373 0.8551724600573882 0.5067783187104192 0.49232206353825486
-  position -0.9583204795502689 -0.2365557695719947 0.31002767974826595
+  orientation 0.3177790443712981 -0.2510001597726227 -0.9143387767958779 4.392521124183659
+  position 0.3662944158307173 -1.2211327774301013 0.9021462624902822
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 DEF MY_DRONE Robot {
-  translation -0.0005574954148682091 2.175913114279811e-06 -0.10058882557457986
-  rotation -0.0222479013062778 -0.04801158349788869 -0.9985989779373357 0.0007955727987666139
+  translation -0.0005575525077146145 2.175260681738008e-06 -0.10058860026571134
+  rotation -0.0222293833426231 -0.049443401638873306 -0.9985295211212255 0.0007956281380897443
   children [
-    DEF joint0 HingeJoint {
-      device [
-        RotationalMotor {
-          name "motor0"
-        }
-      ]
-    }
-    DEF joint1 HingeJoint {
-      device [
-        RotationalMotor {
-          name "motor1"
-        }
-      ]
-    }
-    DEF joint2 HingeJoint {
-      device [
-        RotationalMotor {
-          name "motor2"
-        }
-      ]
-    }
-    DEF joint3 HingeJoint {
-      device [
-        RotationalMotor {
-          name "motor3"
-        }
-      ]
+    DEF prop0 Propeller {
+      device DEF motor0 RotationalMotor {
+        name "motor0"
+      }
+      fastHelix Solid {
+        children [
+          Pose {
+            translation 0.1293 -0.2188 0.0262
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 0.443137 0.443137 0.443137
+                  }
+                }
+                geometry Cylinder {
+                  height 0.005
+                  radius 0.13
+                }
+              }
+            ]
+          }
+        ]
+      }
+      slowHelix Solid {
+        children [
+          Pose {
+            translation 0.1293 -0.2188 0.0262
+            children [
+              CadShape {
+                url [
+                  "../models/iris_with_standoffs/meshes/iris_prop_ccw.dae"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
     DEF accelerometer Accelerometer {
     }
@@ -63,18 +74,7 @@ DEF MY_DRONE Robot {
         }
       ]
     }
-    DEF MOTOR1 Pose {
-      translation 0.1293 -0.2188 0.0262
-      children [
-        CadShape {
-          url [
-            "../models/iris_with_standoffs/meshes/iris_prop_ccw.dae"
-          ]
-        }
-      ]
-      translationStep 0.0001
-    }
-    DEF MOTOR2 Pose {
+    DEF Prop1 Pose {
       translation -0.1339 0.2066 0.0262
       children [
         CadShape {
@@ -85,7 +85,7 @@ DEF MY_DRONE Robot {
       ]
       translationStep 0.0001
     }
-    DEF MOTOR3 Pose {
+    DEF Prop2 Pose {
       translation 0.1257 0.2224 0.0262
       children [
         CadShape {
@@ -96,7 +96,7 @@ DEF MY_DRONE Robot {
       ]
       translationStep 0.0001
     }
-    DEF MOTOR4 Pose {
+    DEF Prop3 Pose {
       translation -0.1376 -0.2027 0.0262
       children [
         CadShape {

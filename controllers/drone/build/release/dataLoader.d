@@ -7,4 +7,5 @@ build/release/dataLoader.o: dataLoader.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Field.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Proto.hpp \
  C:/Program\ Files/Webots/include/controller/c/webots/contact_point.h \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Motor.hpp \
  ../../config/DroneConfig.hpp

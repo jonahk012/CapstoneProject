@@ -1,7 +1,10 @@
 #include <iostream>
 #include <webots/Robot.hpp>
 #include <webots/Supervisor.hpp>
+#include <webots/Motor.hpp>
 #include "../../config/DroneConfig.hpp"
+#include <cmath>
+
 
 void loadConfigData(webots::Supervisor* droneSuper)
 {
@@ -28,5 +31,16 @@ void loadConfigData(webots::Supervisor* droneSuper)
    inertiaField->setMFVec3f(0, inertiaFieldValues);
    std::cout << "Loaded MOI" << std::endl;
    
+   
+   
+
+   // for(int i = 0; i < DroneConfig::motorCount; i++)
+   // {
+     // webots::Motor *motor = droneSuper->getMotor("motor" + std::to_string(i));
+     // motor->setPosition(INFINITY);
+     // motor->setVelocity(0.0);
+   // }
+   
+   //motor0->setPosition(1000.0);
 
 }

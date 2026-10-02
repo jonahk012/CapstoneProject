@@ -32,21 +32,18 @@ namespace DroneConfig
 	constexpr double motorDamping = 0.004;
 	constexpr double maxMotorRPM = 838.0;
 
+	constexpr int motorDirections[4] = {-1, -1, 1, 1};
 	// motor 0
-	constexpr int motor0_direction = -1;
 	constexpr Vector3 motor0Pos{0.1293, -0.2188, 0.0262};
 
 	// motor 1
-	constexpr int motor1_direction = -1;
 	constexpr Vector3 motor1Pos{-0.1339, 0.2066, 0.0262};
 
 		
 	// motor 2
-	constexpr int motor2_direction = 1;
 	constexpr Vector3 motor2Pos{0.1257, 0.2224, 0.0262};
 
 	// motor 3
-	constexpr int motor3_direction = 1;
 	constexpr Vector3 motor3Pos{-0.1378, -0.2027, 0.0262};
 
 
