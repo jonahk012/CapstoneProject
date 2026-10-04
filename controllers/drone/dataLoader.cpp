@@ -34,12 +34,12 @@ void loadConfigData(webots::Supervisor* droneSuper)
    
    
 
-   // for(int i = 0; i < DroneConfig::motorCount; i++)
-   // {
-     // webots::Motor *motor = droneSuper->getMotor("motor" + std::to_string(i));
-     // motor->setPosition(INFINITY);
-     // motor->setVelocity(0.0);
-   // }
+    // for(int i = 0; i < DroneConfig::motorCount; i++)
+    // {
+      // webots::Motor *motor = droneSuper->getMotor("motor" + std::to_string(i));
+      // motor->setPosition(INFINITY);
+      // motor->setVelocity(0);
+    // }
    
    //motor0->setPosition(1000.0);
 

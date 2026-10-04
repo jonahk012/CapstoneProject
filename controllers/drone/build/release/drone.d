@@ -11,4 +11,5 @@ build/release/drone.o: drone.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Gyro.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/InertialUnit.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Accelerometer.hpp \
- dataLoader.hpp
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Motor.hpp \
+ dataLoader.hpp ../../config/DroneConfig.hpp
