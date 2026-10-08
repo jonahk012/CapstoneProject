@@ -39,7 +39,7 @@
 ###
 ### ---- C++ Sources ----
 ### if your program uses several C++ source files:
- CXX_SOURCES = drone.cpp dataLoader.cpp
+ CXX_SOURCES = drone.cpp
 ###
 ### ---- Compilation options ----
 ### if special compilation flags are necessary:
