@@ -10,4 +10,5 @@ build/release/drone.o: drone.cpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Robot.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/GPS.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/InertialUnit.hpp \
- C:\Program\ Files\Webots/include/controller/cpp/webots/Gyro.hpp
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Gyro.hpp \
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Keyboard.hpp
