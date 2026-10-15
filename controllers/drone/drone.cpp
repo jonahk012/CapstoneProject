@@ -32,14 +32,13 @@ double altitudeControl(double currentAltitude, double desiredAltitude, double ve
 
 std::vector<double> positionControl(double currentX, double currentY, const double *desiredPos, const double *velocities, double dt)
 {
-  const double Kp = 0.25;
-  const double Kd = 1.0;
+  const double Kp = 2.5;
+  const double Kd = 3.0;
   
   double errorX = desiredPos[0] - currentX;
   double errorY = desiredPos[1] - currentY;
-  
-  double desiredX = Kp * errorX - Kd * velocities[0];
-  double desiredY = Kp * errorY - Kd * velocities[1];
+  double desiredX = (Kp * errorX) - (Kd * velocities[0]);
+  double desiredY = (Kp * errorY) - (Kd * velocities[1]);
   
   return {desiredX, desiredY};
 }
@@ -48,9 +47,9 @@ double imuIntegError[3] = {0.0, 0.0, 0.0};
 std::vector<double> imuControl(const double *imuValues, const double *desiredImu, const double *angularVelocity,double dt)
 {
   // constat for prop, integ, and deriv, for roll, pitch, and yaw
-  const double Kp[3] = {1.0, 1.0, 0.5}; 
+  const double Kp[3] = {2.0, 2.0, 0.5}; 
   const double Ki[3] = {0.0, 0.0, 0.0};
-  const double Kd[3] = {0.1, 0.1, 0.05};
+  const double Kd[3] = {0.5, 0.5, 0.05};
   
   double errors[3] = {0.0, 0.0, 0.0};
   for(int i = 0; i < 3; i++) errors[i] = desiredImu[i] - imuValues[i];
@@ -70,7 +69,7 @@ std::vector<double> imuControl(const double *imuValues, const double *desiredImu
   
   std::vector<double> correction = {0.0, 0.0, 0.0};
   for(int i = 0; i < 3; i++) correction[i] = outputP[i] - outputD[i] + outputI[i];
-  
+  std::cout << correction[2] << std::endl;
   return correction;
 }
 
@@ -163,13 +162,14 @@ int main()
     gyroValues = gyro->getValues();//angular velocity
     
     int key = keyboard->getKey(); // z is 90, x is 88
-    if(key == 90) desiredAltitude += 0.1;
-    else if(key == 88)  desiredAltitude -= 0.1;
-    else if(key == Keyboard::UP)  desiredPos[0] += 0.1;
-    else if(key == Keyboard::DOWN)  desiredPos[0] -= 0.1;
-    else if(key == Keyboard::RIGHT)  desiredPos[1] -= 0.1;
-    else if(key == Keyboard::LEFT)  desiredPos[1] += 0.1;
-    
+    if(key == 90) desiredAltitude += 2 * dt;
+    else if(key == 88)  desiredAltitude -= 2 * dt;
+    else if(key == Keyboard::UP)  desiredPos[0] += 2 * dt;
+    else if(key == Keyboard::DOWN)  desiredPos[0] -= 2 * dt;
+    else if(key == Keyboard::RIGHT)  desiredPos[1] -= 2 * dt;
+    else if(key == Keyboard::LEFT)  desiredPos[1] += 2 * dt;
+    else if(key == Keyboard::PAGEUP) desiredImu[2] += 2 *dt;
+    else if(key == Keyboard::PAGEDOWN) desiredImu[2] -= 2 *dt;
     // calculate the correction for the altitude to reach the desired altitude
     double verticalVelocity = (gpsValues[2]-previousAltitude)/dt; // calculate the delta V
     altitudeCorrection = altitudeControl(gpsValues[2], desiredAltitude, verticalVelocity, dt); 
@@ -184,15 +184,15 @@ int main()
     double angularVelocity[3] = {gyroValues[0], gyroValues[1], gyroValues[2]};
     std::vector<double> imuCorrection = imuControl(imuValues, desiredImu, angularVelocity, dt);
     
-    // std::cout << "Current: " <<gpsValues[0] << std::endl;
-    // std::cout << "Desired: " <<desiredPos[0] << std::endl;
+     std::cout << "Current: " <<imuValues[2] << std::endl;
+    std::cout << "Desired: " <<desiredImu[2] << std::endl;
     // std::cout << "Correct: " << posCorrection[0] << std::endl;
     
     // calculate the motor velocity inputs bases on the corrections
-    motorInputs[0] = base+altitudeCorrection - imuCorrection[1] - imuCorrection[0]; // FR
-    motorInputs[1] = base + altitudeCorrection + imuCorrection[1] - imuCorrection[0]; // RR
-    motorInputs[2] = base + altitudeCorrection + imuCorrection[1] + imuCorrection[0]; // RL
-    motorInputs[3] = base +altitudeCorrection - imuCorrection[1] + imuCorrection[0]; // FL
+    motorInputs[0] = base+altitudeCorrection - imuCorrection[1] - imuCorrection[0]  +imuCorrection[2]; // FR
+    motorInputs[1] = base + altitudeCorrection + imuCorrection[1] - imuCorrection[0] - imuCorrection[2]; // RR
+    motorInputs[2] = base + altitudeCorrection + imuCorrection[1] + imuCorrection[0] + imuCorrection[2]; // RL
+    motorInputs[3] = base +altitudeCorrection - imuCorrection[1] + imuCorrection[0] - imuCorrection[2]; // FL
     for(int m = 0; m < 4; m++)
     {
       if(m%2==0)
