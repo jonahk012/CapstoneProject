@@ -7,16 +7,21 @@ including all of the flight controller, PID controllers, etc...
 #include "DroneState.hpp"
 
 #include <vector>
+#include <fstream>
+#include <string>
 
 bool mixMotors(double altitudeCorrection);
+bool recordTelemetry();
+void clearCSV();
 
 WebotsInterface interface = WebotsInterface();
 AltitudePID aPID;
 DroneState state;
 
-
+bool firstLoop = true;
 int main()
 {
+
   // the sensors include... gps, gyro, and imu (orientation)
   // gps is index 0, gyro is 1, imu is 2
   // you have to index 2 times bc its a 2d vector/array
@@ -37,7 +42,8 @@ int main()
     mixMotors(altitudeCorrection);
     interface.updateMotorThrust(state);
     
-    interface.printTelemetry();
+    //interface.printTelemetry();
+    recordTelemetry();
   }
 }
 
@@ -47,6 +53,33 @@ bool mixMotors(double altitudeCorrection)
   {
     interface.motorInputs[i] = interface.baseThrust + altitudeCorrection;
   }
+  return true;
+}
+
+void clearCSV()
+{
+  std::ofstream fileToClear("../../storedTelemetry/telemetry.csv", std::ios::trunc);
+  fileToClear.close();
+}
+
+
+bool recordTelemetry()
+{ 
+  if(firstLoop)
+    clearCSV();
+    
+  std::ofstream csvFile("../../storedTelemetry/telemetry.csv", std::ios::app);
+  if(!csvFile.is_open())
+  {
+    std::cout << "Cannot Find csvFile" << std::endl;
+    return false;
+  }
   
+  if(firstLoop)
+    csvFile << "dAlt,cAlt\n"; //later on add a bunch of more data to store for later viewing or sum
+    
+  csvFile << std::to_string(state.desiredAltitude) <<","<< std::to_string(state.altitude)<<"\n";
+  csvFile.close();
+  firstLoop = false;
   return true;
 }

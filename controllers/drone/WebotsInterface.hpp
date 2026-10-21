@@ -24,6 +24,7 @@ struct WebotsInterface
   Supervisor* drone;
   int timeStep;
   double dt;
+  double time;
   // sensors
   GPS* gps;
   const double* gpsValues;
@@ -52,6 +53,7 @@ struct WebotsInterface
    timeStep = drone->getBasicTimeStep();
    if(timeStep == 0) timeStep = 32;
    dt = timeStep/1000.0;
+   time = drone->getTime();
    gps = drone->getGPS("gps");
    gps->enable(timeStep);
    gpsValues = gps->getValues();
@@ -76,8 +78,10 @@ struct WebotsInterface
   
   bool running()
   {
+    
     if (drone->step(timeStep) == -1)
       return false;
+    time = drone->getTime();
     return true;
   }
   
