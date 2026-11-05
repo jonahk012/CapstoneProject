@@ -45,6 +45,11 @@ struct DroneState
     yaw = sensorValues[2][2];
     
     accelerating = accel;
+    
+    // update previous vars
+    previousAltitude = sensorValues[0][2];
+    previousX = sensorValues[0][0];
+    previousY = sensorValues[0][1];
     return true;
   }
   void printTelemetry()

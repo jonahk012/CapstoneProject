@@ -9,6 +9,8 @@ struct DroneTargets
   double desiredPitch = 0.0;
   double desiredYaw = 0.0;
   
+  double desiredXYVelocity = 0.0; // used for breaking/slowing down the drone
+  double desiredVVelocity = 9.81;
   double disturbanceX = 0.0;
   double disturbanceY = 0.0;
   void printTelemetry()

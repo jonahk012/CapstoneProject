@@ -12,4 +12,6 @@ build/release/drone.o: drone.cpp AltitudePID.hpp WebotsInterface.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/InertialUnit.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Motor.hpp \
  C:\Program\ Files\Webots/include/controller/cpp/webots/Keyboard.hpp \
- DroneState.hpp DroneTargets.hpp PositionPID.hpp OrientationPID.hpp
+ C:\Program\ Files\Webots/include/controller/cpp/webots/Accelerometer.hpp \
+ DroneState.hpp DroneTargets.hpp PositionPID.hpp OrientationPID.hpp \
+ VelocityPID.hpp

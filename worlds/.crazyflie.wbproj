@@ -1,11 +1,11 @@
 Webots Project File version R2025a
 perspectives: 000000ff00000000fd0000000200000001000003b700000363fc0200000001fb0000001400540065007800740045006400690074006f0072010000001d000003630000009200ffffff0000000300000738000000effc0100000001fb0000001a0043006f006e0073006f006c00650041006c006c0041006c006c0100000000000007380000006900ffffff0000037f0000036300000001000000020000000100000008fc00000000
-simulationViewPerspectives: 000000ff000000010000000200000141000001c80100000002010000000100
+simulationViewPerspectives: 000000ff00000001000000020000013e0000023f0100000002010000000100
 sceneTreePerspectives: 000000ff000000010000000300000026000000c0000000fa0100000002010000000200
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 5 "controllers/drone/drone.cpp" "controllers/drone/WebotsInterface.hpp" "controllers/drone/AltitudePID.hpp" "controllers/drone/DroneState.hpp" "controllers/drone/OrientationPID.hpp" "controllers/drone/DroneTargets.hpp"
+textFiles: 0 "controllers/drone/drone.cpp" "controllers/drone/WebotsInterface.hpp" "controllers/drone/AltitudePID.hpp" "controllers/drone/DroneState.hpp" "controllers/drone/OrientationPID.hpp" "controllers/drone/DroneTargets.hpp" "controllers/drone/VelocityPID.hpp"
 globalOptionalRendering: CoordinateSystem::Skeleton
 centerOfMass: Crazyflie
 consoles: Console:All:All

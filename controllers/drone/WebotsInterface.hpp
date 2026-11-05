@@ -14,6 +14,7 @@ modules on the drone
 #include <webots/InertialUnit.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Keyboard.hpp>
+#include <webots/Accelerometer.hpp>
 #include "DroneState.hpp"
 #include "DroneTargets.hpp"
 using namespace webots;
@@ -38,6 +39,9 @@ struct WebotsInterface
   
   InertialUnit* imu;
   const double* imuValues;
+  
+  Accelerometer* acl;
+  const double* aclValues;
   
   // motors
   Motor *frontRightMotor;
@@ -70,6 +74,10 @@ struct WebotsInterface
    imu = drone->getInertialUnit("inertial_unit");
    imu->enable(timeStep);
    imuValues = imu->getRollPitchYaw();
+   
+   acl = drone->getAccelerometer("accelerometer");
+   acl->enable(timeStep);
+   aclValues = acl->getValues();
    
    keyboard = new Keyboard;
    keyboard->enable(timeStep);
@@ -114,13 +122,13 @@ struct WebotsInterface
     }
     else
     {
-      targets.disturbanceX *= breaking;
-      targets.disturbanceY *= breaking;
+       targets.disturbanceX *= breaking;
+       targets.disturbanceY *= breaking;
       return false;
     }
     return true;
   }
-  std::vector<const double*> updateSensors(){return {gps->getValues(), gyro->getValues(), imu->getRollPitchYaw()};}
+  std::vector<const double*> updateSensors(){return {gps->getValues(), gyro->getValues(), imu->getRollPitchYaw(), acl->getValues()};}
   
   bool setupMotors()
   {
@@ -149,9 +157,7 @@ struct WebotsInterface
       else
         motors[m]->setVelocity(motorInputs[m]);
     }
-    state.previousAltitude = gpsValues[2];
-    state.previousX = gpsValues[0];
-    state.previousY = gpsValues[1];
+    
     
     return true;
   }
