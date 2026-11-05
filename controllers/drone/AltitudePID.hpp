@@ -3,9 +3,9 @@
 
 struct AltitudePID
 {
-  const double Kp = 1.7; // constant proportional
-  const double Ki = .2; // constant integral
-  const double Kd = 4.5; // constant derivative
+  const double Kp = 3.0; // constant proportional
+  const double Ki = 0.1; // constant integral .2
+  const double Kd = 4.0; // constant derivative 4.5
   double integError = 0.0;
 
   

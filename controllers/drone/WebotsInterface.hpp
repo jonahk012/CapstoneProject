@@ -13,13 +13,17 @@ modules on the drone
 #include <webots/Gyro.hpp>
 #include <webots/InertialUnit.hpp>
 #include <webots/Motor.hpp>
+#include <webots/Keyboard.hpp>
 #include "DroneState.hpp"
+#include "DroneTargets.hpp"
 using namespace webots;
 
 
 
 struct WebotsInterface
 {
+  Keyboard *keyboard;
+  double breaking;
   // make the drone and the timestep
   Supervisor* drone;
   int timeStep;
@@ -49,6 +53,7 @@ struct WebotsInterface
   
   WebotsInterface()
   {
+   breaking = 0.7;
    drone = new Supervisor();
    timeStep = drone->getBasicTimeStep();
    if(timeStep == 0) timeStep = 32;
@@ -66,6 +71,9 @@ struct WebotsInterface
    imu->enable(timeStep);
    imuValues = imu->getRollPitchYaw();
    
+   keyboard = new Keyboard;
+   keyboard->enable(timeStep);
+  
    frontRightMotor = drone->getMotor("m1_motor");
    rearRightMotor = drone->getMotor("m2_motor");
    rearLeftMotor = drone->getMotor("m3_motor"); 
@@ -85,6 +93,33 @@ struct WebotsInterface
     return true;
   }
   
+  bool checkKeyboardInputs(DroneTargets& targets, std::vector<const double*> sensors)
+  {
+    // later make it so if im not currently trying to move, i activate a method
+    // that corrects velocity, so that will break for me and correct the drifting after
+    // the disturbance becomes zero
+    int key = keyboard->getKey(); // z is 90, x is 88
+    if(key != -1)
+    {
+    if(key == 90) targets.desiredAltitude += 2.0 * dt;
+    else if(key == 88)  targets.desiredAltitude -= 2.0 * dt;
+    if(key == Keyboard::UP)  targets.disturbanceX += 2.0 * dt;
+    else if(key == Keyboard::DOWN)  targets.disturbanceX -= 2.0 * dt;
+    if(key == Keyboard::RIGHT)  targets.disturbanceY -= 2.0 * dt;
+    else if(key == Keyboard::LEFT)  targets.disturbanceY += 2.0 * dt;
+      
+    // else if(key == Keyboard::PAGEUP) desiredImu[2] += 2 *dt;
+    // else if(key == Keyboard::PAGEDOWN) desiredImu[2] -= 2 *dt;
+    
+    }
+    else
+    {
+      targets.disturbanceX *= breaking;
+      targets.disturbanceY *= breaking;
+      return false;
+    }
+    return true;
+  }
   std::vector<const double*> updateSensors(){return {gps->getValues(), gyro->getValues(), imu->getRollPitchYaw()};}
   
   bool setupMotors()
@@ -115,6 +150,9 @@ struct WebotsInterface
         motors[m]->setVelocity(motorInputs[m]);
     }
     state.previousAltitude = gpsValues[2];
+    state.previousX = gpsValues[0];
+    state.previousY = gpsValues[1];
+    
     return true;
   }
   
