@@ -44,7 +44,9 @@ int main()
   {
     //updates the sensors every frame (every timestep)
     sensors = interface.updateSensors();
-    
+    // clamps the x and y disturbance so i cant tilt past a certain point causing a big no no
+    targets.disturbanceX = std::clamp(targets.disturbanceX, -.5, .5);
+    targets.disturbanceY = std::clamp(targets.disturbanceY, -.5, .5);
     // goes to the interface header file and checks if the
     // keyboard is pressed, it affects the disturbance in targets
     // additionally, returns true if a key is being pressed and false if not
@@ -63,14 +65,14 @@ int main()
     
     // VELOCITY CORRECCTIONNNN
     //   std::vector<double> velocityCorrection(double xVelocity, double yVelocity, double verticalVelocity, double desiredVVelocity, double desiredXYVelocity, const double* aclValues)
-    std::vector<double> velocityCorrection = vPID.velocityCorrection(state.xVelocity, state.yVelocity, state.verticalVelocity, targets.desiredVVelocity, targets.desiredXYVelocity, sensors[3]);
+    std::vector<double> velocityCorrection = vPID.velocityCorrection(state.xVelocity, state.yVelocity, state.verticalVelocity, targets.desiredVVelocity, targets.desiredXYVelocity, sensors[3], interface.dt);
     targets.desiredPitch = std::atan(velocityCorrection[0] / 9.81);
     targets.desiredRoll = -std::atan(velocityCorrection[1] / 9.81);
     //pPID.positionCorrection(targets.desiredX, targets.desiredY, sensors[0],state.xVelocity, state.yVelocity, targets);
     // bool imuCorrection(double desiredRoll, double desiredPitch, double desiredYaw, const double* imuValues, const double* gyroValues)
     std::vector<double> imuCorrection = imuPID.imuCorrection(targets.desiredRoll, targets.desiredPitch, targets.desiredYaw, sensors[2], sensors[1]);
     
-    std::cout << targets.desiredRoll << std::endl;
+
     mixMotors(altitudeCorrection, imuCorrection, velocityCorrection);
     interface.updateMotorThrust(state);
     
@@ -82,14 +84,22 @@ int main()
 
 bool mixMotors(double altitudeCorrection, std::vector<double> imuCorrection, std::vector<double> velocityCorrection)
 {
+   //𝑇compensated=  𝑇alt / ( cos(𝜙)⋅cos(𝜃) )
+
+    double tiltFactor = std::cos(sensors[2][0]) * std::cos(sensors[2][1]);
+    tiltFactor = std::max(0.85, tiltFactor);
+    double totalThrust = (interface.baseThrust + altitudeCorrection) / tiltFactor;
     
-    interface.motorInputs[0] = interface.baseThrust + altitudeCorrection - targets.disturbanceX + targets.disturbanceY - imuCorrection[1] - imuCorrection[0]; // FR
-    interface.motorInputs[1] = interface.baseThrust + altitudeCorrection + targets.disturbanceX + targets.disturbanceY + imuCorrection[1] - imuCorrection[0]; // RR
-    interface.motorInputs[2] = interface.baseThrust + altitudeCorrection + targets.disturbanceX - targets.disturbanceY + imuCorrection[1] + imuCorrection[0]; // RL
-    interface.motorInputs[3] = interface.baseThrust + altitudeCorrection - targets.disturbanceX - targets.disturbanceY - imuCorrection[1] + imuCorrection[0]; // FL
+    std::cout << imuCorrection[2] << std::endl;
+    
+    interface.motorInputs[0] = totalThrust + altitudeCorrection - targets.disturbanceX + targets.disturbanceY - imuCorrection[1] - imuCorrection[0] + imuCorrection[2]; // FR
+    interface.motorInputs[1] = totalThrust + altitudeCorrection + targets.disturbanceX + targets.disturbanceY + imuCorrection[1] - imuCorrection[0] - imuCorrection[2]; // RR
+    interface.motorInputs[2] = totalThrust + altitudeCorrection + targets.disturbanceX - targets.disturbanceY + imuCorrection[1] + imuCorrection[0] + imuCorrection[2]; // RL
+    interface.motorInputs[3] = totalThrust + altitudeCorrection - targets.disturbanceX - targets.disturbanceY - imuCorrection[1] + imuCorrection[0] - imuCorrection[2]; // FL
+    
     for(int i = 0; i <4; i++)
     {
-      interface.motorInputs[i] = std::clamp(interface.motorInputs[i], -maxMotorThrust, maxMotorThrust);
+      interface.motorInputs[i] = std::clamp(interface.motorInputs[i], 0.0, maxMotorThrust);
     }
   return true;
 }
