@@ -53,7 +53,7 @@ struct WebotsInterface
   
   std::vector<double> motorInputs;
   
-  const double baseThrust = 55.3681;
+  const double baseThrust = 55.3680864759;
   
   WebotsInterface()
   {
@@ -100,7 +100,7 @@ struct WebotsInterface
     time = drone->getTime();
     return true;
   }
-  
+  // later on it isnt gonna be controlled by a keyboard, but by a drone controller
   bool checkKeyboardInputs(DroneTargets& targets, std::vector<const double*> sensors)
   {
     // later make it so if im not currently trying to move, i activate a method
@@ -121,9 +121,11 @@ struct WebotsInterface
     
     }
     else
-    {
-       targets.disturbanceX *= breaking;
-       targets.disturbanceY *= breaking;
+     {
+       // targets.disturbanceX *= breaking;
+       // targets.disturbanceY *= breaking;
+       targets.disturbanceX = 0;
+       targets.disturbanceY = 0;
       return false;
     }
     return true;
