@@ -219,9 +219,10 @@ Robot {
     height 0.03
     radius 0.05
   }
-  physics Physics {
+  physics DEF physics Physics {
     density -1
     mass 0.05
   }
-  controller "drone"
+  controller "drone2"
+  supervisor TRUE
 }

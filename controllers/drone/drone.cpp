@@ -79,7 +79,6 @@ int main()
       targets.desiredPitch = 0;
       targets.desiredRoll = 0;
     }
-
     //pPID.positionCorrection(targets.desiredX, targets.desiredY, sensors[0],state.xVelocity, state.yVelocity, targets);
     // bool imuCorrection(double desiredRoll, double desiredPitch, double desiredYaw, const double* imuValues, const double* gyroValues)
     std::vector<double> imuCorrection = imuPID.imuCorrection(targets.desiredRoll, targets.desiredPitch, targets.desiredYaw, sensors[2], sensors[1]);
@@ -96,8 +95,7 @@ int main()
 
 bool mixMotors(double altitudeCorrection, std::vector<double> imuCorrection, std::vector<double> velocityCorrection)
 {
-   
-
+  
     double tiltFactor = std::sqrt(1.0/(std::cos(sensors[2][0]) * std::cos(sensors[2][1])));
     
     double totalThrust = (interface.baseThrust + altitudeCorrection) * tiltFactor;
@@ -140,7 +138,7 @@ bool recordTelemetry()
     // gps is index 0, gyro is 1, imu is 2, accelerometer is 3
   
   if(firstLoop)
-    csvFile << "Xpos, Ypos, Zpos, RollVel, PitchVel, YawVel, Roll, Pitch, Yaw, Xacl, Yacl, ZAcl\n"; //later on add a bunch of more data to store for later viewing or sum
+    csvFile << "Xpos, Ypos, Zpos, RollVel, PitchVel, YawVel, xVel, yVel, zVel, Roll, Pitch, Yaw, Xacl, Yacl, ZAcl\n"; //later on add a bunch of more data to store for later viewing or sum
     
   csvFile << std::to_string(sensors[0][0]) <<","
   << std::to_string(sensors[0][1])<<","
@@ -148,6 +146,9 @@ bool recordTelemetry()
   << std::to_string(sensors[1][0])<<","
   << std::to_string(sensors[1][1])<<","
   << std::to_string(sensors[1][2])<<","
+  << std::to_string(state.xVelocity)<<","
+  << std::to_string(state.yVelocity)<<","
+  << std::to_string(state.verticalVelocity)<<","
   << std::to_string(sensors[2][0])<<","
   << std::to_string(sensors[2][1])<<","
   << std::to_string(sensors[2][2])<<","

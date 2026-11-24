@@ -52,9 +52,10 @@ struct WebotsInterface
   std::vector<Motor*> motors;
   
   std::vector<double> motorInputs;
-  
-  const double baseThrust = 55.3680864759;
-  
+  double m;
+  double K_th;
+  double baseThrust;
+ 
   WebotsInterface()
   {
    breaking = 0.7;
@@ -89,6 +90,9 @@ struct WebotsInterface
    motors = {frontRightMotor, rearRightMotor, rearLeftMotor, frontLeftMotor};
    motorInputs = {0.0, 0.0, 0.0, 0.0};
    setupMotors();
+   m = drone->getFromDef("physics")->getField("mass")->getSFFloat();
+   K_th = drone->getFromDef("M1")->getField("thrustConstants")->getSFVec2f()[0];
+   baseThrust = calculateBaseThrust();
   }
   
   
@@ -164,6 +168,19 @@ struct WebotsInterface
     return true;
   }
   
+  double calculateBaseThrust()
+  {
+    double F_g = m *9.81;
+    double F_th = F_g;
+    // we want for net force to equal 0,
+    // Net Force = F_th - F_g = 0
+    // F_th has to equal F_g
+    // F_th = K_th * rad/s^2
+    // rad/s = +- sqrt(F_th/K_th)
+    // V_motor = rad/s / 2
+    double radPS = std::sqrt(F_th/std::abs(K_th)) * .5;
+    return radPS;
+  }
   void printTelemetry()
   {
 
