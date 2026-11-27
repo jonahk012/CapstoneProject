@@ -94,7 +94,51 @@ struct WebotsInterface
    K_th = drone->getFromDef("M1")->getField("thrustConstants")->getSFVec2f()[0];
    baseThrust = calculateBaseThrust();
   }
+  void reset()
+  {
+    drone->simulationReset();
+    drone->simulationResetPhysics();
+   drone->step(timeStep);
+   
+    for(int i = 0; i < 4; i++) {
+      motors[i]->setVelocity(0.0);
+      motors[i]->setPosition(INFINITY);
+      }
+   breaking = 0.7;
+   timeStep = drone->getBasicTimeStep();
+   if(timeStep == 0) timeStep = 32;
+   dt = timeStep/1000.0;
+   time = drone->getTime();
+   gps = drone->getGPS("gps");
+   gps->enable(timeStep);
+   gpsValues = gps->getValues();
+   
+   gyro = drone->getGyro("gyro");
+   gyro->enable(timeStep);
+   gyroValues = gyro->getValues();
+   
+   imu = drone->getInertialUnit("inertial_unit");
+   imu->enable(timeStep);
+   imuValues = imu->getRollPitchYaw();
+   
+   acl = drone->getAccelerometer("accelerometer");
+   acl->enable(timeStep);
+   aclValues = acl->getValues();
+   
+   keyboard->enable(timeStep);
   
+   frontRightMotor = drone->getMotor("m1_motor");
+   rearRightMotor = drone->getMotor("m2_motor");
+   rearLeftMotor = drone->getMotor("m3_motor"); 
+   frontLeftMotor = drone->getMotor("m4_motor");
+   motors = {frontRightMotor, rearRightMotor, rearLeftMotor, frontLeftMotor};
+   motorInputs = {0.0, 0.0, 0.0, 0.0};
+   setupMotors();
+   m = drone->getFromDef("physics")->getField("mass")->getSFFloat();
+   K_th = drone->getFromDef("M1")->getField("thrustConstants")->getSFVec2f()[0];
+   baseThrust = calculateBaseThrust();
+   
+  }
   
   bool running()
   {
@@ -156,9 +200,14 @@ struct WebotsInterface
   
   bool updateMotorThrust(DroneState& state)
   {
+    
     for(int m = 0; m < 4; m++)
     {
-      if(m%2==0)
+    
+      if(std::isnan(motorInputs[m]))
+        motorInputs[m]=0;
+      
+      if(m%2==0 )
         motors[m]->setVelocity(-motorInputs[m]);
       else
         motors[m]->setVelocity(motorInputs[m]);

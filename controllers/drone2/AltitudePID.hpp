@@ -1,22 +1,26 @@
 #pragma once
 #include <algorithm>
+#include <vector>
 
 struct AltitudePID
 {
-  const double Kp = 3.0; // constant proportional
-  const double Ki = 0.1; // constant integral .2
-  const double Kd = 4.0; // constant derivative 4.5
+  double Kp = 3.0; // constant proportional
+  double Ki = 0.1; // constant integral .2
+  double Kd = 4.0; // constant derivative 4.5
   double integError = 0.0;
-
   
-double altitudeCorrection(double desiredAltitude, double currentAltitude, double verticalVelocity, double dt)
+double altitudeCorrection(double desiredAltitude, double currentAltitude, double verticalVelocity, double dt, std::vector<double> constants)
   {
+    double Kp = constants[0]; // constant proportional
+    double Ki = constants[1]; // constant integral .2
+    double Kd = constants[2]; // constant derivative 4.5
+  
     double error = desiredAltitude - currentAltitude; // altitude error
     
     double outputP = Kp*error; // calculate the proportional output
     
     integError += error* dt; // calculates the integral error
-    integError = std::clamp(integError, -0.05, 0.05); // clamps the integral error to -.5 to .5 so it dosnt go crazy and overshoot
+    //integError = std::clamp(integError, -0.05, 0.05); // clamps the integral error to -.5 to .5 so it dosnt go crazy and overshoot
     double outputI = Ki * integError; // calculate the integral output
     
     double outputD = Kd * verticalVelocity; // calculate the derivative output

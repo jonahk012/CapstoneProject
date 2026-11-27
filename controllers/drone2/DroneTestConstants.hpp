@@ -25,25 +25,37 @@ struct DroneTestConstants
   bool firstLoop = true;
   std::vector<const double*> sensors;
   
+  // Variables for training
+  double zOvershoot = 0;
+  double totalIntegErrorZ = 0;
+  
   // member initializer list - runs the thing after the constructor before it can each the other parts of the struct
   DroneTestConstants(WebotsInterface& interface, AltitudePID& aPID, DroneState& state, PositionPID& pPID, OrientationPID& imuPID, VelocityPID& vPID, DroneTargets& targets) :interface(interface), aPID(aPID), state(state), pPID(pPID), imuPID(imuPID), vPID(vPID), targets(targets) 
   {}
   
-  int runLoop(double testRunTime)
+  int runLoop(double testRunTime, std::vector<double> constantsToTest)
   {
-    
+    std::cout << "Running new loop with " << testRunTime << " time." << std::endl;
     // the sensors include... gps, gyro, and imu (orientation)
     // gps is index 0, gyro is 1, imu is 2, accelerometer is 3
     // you have to index 2 times bc its a 2d vector/array
     sensors = interface.updateSensors();
     
     double runTime = 0;
+    while(interface.running() && runTime < 0) // just to give it 1 sec before it starts
+    {runTime = interface.drone->getTime();}
+    
     while(interface.running()) // returns true if the loop is continuing
     {
       runTime = interface.drone->getTime();
-      if(runTime >= testRunTime)
+      if(testRunTime != -1 && runTime >= testRunTime)
       {
-        interface.drone->simulationReset();
+        // instead of like resetting right away, calculates everything needed before reset, like calculate the new constants and also write to the file
+        recordTestingData(true, constantsToTest);
+        
+        interface.reset();
+        // im gonna reset everything that has accumulated in the sim
+        return 1;
       }
       //updates the sensors every frame (every timestep)
       sensors = interface.updateSensors();
@@ -67,7 +79,7 @@ struct DroneTestConstants
       state.update(sensors, interface.dt, accelerating);
       // calculate the altitude correction thrust for each motor
       // double altitudeCorrection(double desiredAltitude, double currentAltitude, double verticalVelocity, double dt)
-      double altitudeCorrection = aPID.altitudeCorrection(targets.desiredAltitude, sensors[0][2], state.verticalVelocity, interface.dt);
+      double altitudeCorrection = aPID.altitudeCorrection(targets.desiredAltitude, sensors[0][2], state.verticalVelocity, interface.dt, constantsToTest);
       
       // VELOCITY CORRECCTIONNNN
       //   std::vector<double> velocityCorrection(double xVelocity, double yVelocity, double verticalVelocity, double desiredVVelocity, double desiredXYVelocity, const double* aclValues)
@@ -93,16 +105,46 @@ struct DroneTestConstants
       //interface.printTelemetry();
       //targets.printTelemetry();
       recordTelemetry();
+      recordTestingData(false, constantsToTest);
     }
     return 1;
   };
-  
+  bool recordTestingData(bool record, std::vector<double> constantsToTest)
+  {
+    // somewhere in here i wanna add a score to keep track of 
+    // i also just wanna put 
+    double errorZ = state.altitude - targets.desiredAltitude;
+    if(errorZ > 0 && errorZ > zOvershoot)
+      zOvershoot = errorZ;
+    totalIntegErrorZ += std::abs(errorZ) * interface.drone->getTime() * interface.dt;
+    
+    if(record)
+    {
+      std::ofstream csvFile("testingPID.csv", std::ofstream::app);
+      if(!csvFile.is_open())
+      {
+        std::cout << "Cannot Find csvFile or file is open" << std::endl;
+        return false;
+      }
+      double weightInteg = 1;
+      double weightOvershoot = 50;
+      double score = (weightInteg * totalIntegErrorZ) + (weightOvershoot * zOvershoot);
+      csvFile << constantsToTest[0] << ","
+      << constantsToTest[1] << ","
+      << constantsToTest[2] << ","
+      << score << ","
+      << 0 << ","
+      << 0 << ","
+      << zOvershoot <<
+      std::endl;
+    }
+    return true;
+  }
   bool mixMotors(double altitudeCorrection, std::vector<double> imuCorrection, std::vector<double> velocityCorrection)
   {
     double tiltFactor = std::sqrt(1.0/(std::cos(sensors[2][0]) * std::cos(sensors[2][1])));
     
     double totalThrust = (interface.baseThrust + altitudeCorrection) * tiltFactor;
-    
     
     interface.motorInputs[0] = totalThrust - targets.disturbanceX + targets.disturbanceY - imuCorrection[1] - imuCorrection[0] + imuCorrection[2]; // FR
     interface.motorInputs[1] = totalThrust + targets.disturbanceX + targets.disturbanceY + imuCorrection[1] - imuCorrection[0] - imuCorrection[2]; // RR
@@ -120,6 +162,7 @@ struct DroneTestConstants
   void clearCSV()
   {
     std::ofstream fileToClear("../../storedTelemetry/telemetry.csv", std::ios::trunc);
+    
     fileToClear.close();
   };
   bool recordTelemetry()
